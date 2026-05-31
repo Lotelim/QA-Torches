@@ -17,7 +17,7 @@ public class PlayerCameraControl : MonoBehaviour
     private float _yaw = 90f;
     private float _pitchMin = -80;
     private float _pitchMax = 80f;
-    private float sensitivity = 8f;
+    private float sensitivity = 30f;
     private Vector2 _cameraVector;
     private bool _isSprinting;
     private float _baseFOV = 65f;
