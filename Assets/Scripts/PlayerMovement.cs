@@ -6,8 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Input Actions")]
     [SerializeField] InputActionReference moveAction;
-    [SerializeField] InputActionReference sprintAction;
-    [SerializeField] InputActionReference jumpAction;
 
     [Header("References")]
     [SerializeField] CharacterController playerCharacterController;
@@ -28,9 +26,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         _movementVector = CanMove ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
-        _isSprinting = CanMove && sprintAction.action.IsPressed();
-        _isJumping = CanMove && jumpAction.action.IsPressed();
-
 
         HandleMovement();
     }

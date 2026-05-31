@@ -5,10 +5,8 @@ public class PlayerInputManager : MonoBehaviour
 {
     [Header("Components")]
     public PlayerCameraControl PlayerCameraControlComponent;
-    public PlayerInteract PlayerInteractComponent;
     public PlayerMovement PlayerMovementComponent;
-    public PlayerMouseOver PlayerMouseOverComponent;
-    public PlayerHotbarInput PlayerHotbarInput;
+
 
     private bool _canGetInput = true;
 
@@ -17,21 +15,8 @@ public class PlayerInputManager : MonoBehaviour
         set
         {
             _canGetInput = value;
-            PlayerCameraControlComponent.CanLook = value;
-            PlayerInteractComponent.CanInteract = value;
+            PlayerCameraControlComponent.CanLook = value;        
             PlayerMovementComponent.CanMove = value;
-            PlayerMouseOverComponent.CanPoint = value;
-            PlayerHotbarInput.CanPress = value;
-        }
-    }
-
-    private void Update()
-    {
-        // start the always running raycast
-        if (Time.frameCount % 5 == 0)
-        {
-            if (PlayerCameraControlComponent != null)
-                PlayerMouseOverComponent.RaycastToItem(PlayerCameraControlComponent.cameraComponent);
         }
     }
 }
