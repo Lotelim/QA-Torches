@@ -1,16 +1,14 @@
-using System;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using static UnityEditor.Progress;
+
 
 public class PlayerManager : MonoBehaviour
 {
     [Header("Player Input")]
     [SerializeField] PlayerInputManager _playerInputManager;
 
-    private Interactable lastItemInteractedWith = null;
+    [Header("UI")]
+    [SerializeField] KeybindsHandler _keybindsHandler;
+    [SerializeField] UpdateKeybindHintText _keybindHintText;
 
     private void Start()
     {
@@ -35,13 +33,26 @@ public class PlayerManager : MonoBehaviour
         // On player mouse over, activate the keybind hint for grab.
         _playerInputManager.PlayerMouseOverComponent.OnPlayerMouseOver += (Interactable interactable) =>
         {
-            interactable.OnFocus();
+            if (interactable is InteractableTorch IT)
+            {
+                if (!IT.IsLit)
+                {
+                    interactable.OnFocus();
+                    ActivateKeybindHint("Interact");
+                }
+            }
         };
 
         // On player mouse out, deactivate the keybind hint.
         _playerInputManager.PlayerMouseOverComponent.OnPlayerMouseOut += () =>
         {
             _playerInputManager.PlayerMouseOverComponent.latestItem.OnUnfocus();
+            _keybindHintText.SetPanelActive(false);
         };
+    }
+    public void ActivateKeybindHint(string value)
+    {
+        _keybindHintText.SetPanelActive(true);
+        _keybindHintText.UpdateKeybindHint(_keybindsHandler.GetKeybindHint(value));
     }
 }
