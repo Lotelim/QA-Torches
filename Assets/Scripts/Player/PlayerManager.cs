@@ -23,11 +23,7 @@ public class PlayerManager : MonoBehaviour
         _playerInputManager.PlayerInteractComponent.OnPlayerInteract += () =>  // on player pickup invoke, add to player inventory
         {
             Interactable latestItem = _playerInputManager.PlayerMouseOverComponent.latestItem;
-            if (latestItem is InteractableTorch IT)
-            {
-                if (!IT.IsLit)
-                    IT.LightUp();
-            }
+            latestItem.Interact();
         };
 
         // On player mouse over, activate the keybind hint for grab.
