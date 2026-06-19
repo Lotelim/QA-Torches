@@ -11,6 +11,6 @@ public class InteractableTorch : Interactable
     public void LightUp()
     {
         isLit = true;
-        torchHeadRenderer.material = litMaterial;
+        //torchHeadRenderer.material = litMaterial;
     }
 }
