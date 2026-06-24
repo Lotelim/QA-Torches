@@ -1,1 +1,67 @@
+name: Unity
 
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }} # Your Unity License (.ulf) text content
+
+jobs:
+  # 1. Run Automated Unit Tests (EditMode and PlayMode)
+  run-tests:
+    name: Run Unity Tests 🧪
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Library Folder
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}
+
+      - name: Execute Tests
+        uses: game-ci/unity-test-runner@v4
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  # 2. Build for Target Platforms if Tests Pass
+  build-project:
+    name: Build Game 🛠️
+    needs: run-tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64 # Windows x64
+          - StandaloneLinux64   # Linux x64
+          - WebGL               # Web Browser Player
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Library Folder
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}
+
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v4
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ matrix.matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
